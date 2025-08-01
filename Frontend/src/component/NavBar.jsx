@@ -43,21 +43,6 @@ const NavBar = () => {
           <img alt="Logo" className="h-10" height={150} width={50} />
         </div>
 
-        {/* SignIn and SignUp */}
-        {/* <div className="flex items-center space-x-4">
-          <a
-            className="text-white hover:text-darkblue"
-            onClick={() => navigate("/signin")}
-          >
-            Login
-          </a>
-          <a
-            className="text-white hover:text-darkblue hidden md:block"
-            onClick={() => navigate("/signup")}
-          >
-            SignUp
-          </a>
-        </div> */}
         <div className="flex items-center space-x-4">
           {user ? (
             <button
