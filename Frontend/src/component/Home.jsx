@@ -44,7 +44,7 @@ const Home = () => {
 
     try {
       const res = await axios.post(
-        "http://localhost:3000/api/getsuggestion",
+        "https://bageasy-backend.onrender.com/api/getsuggestion",
         inputData,
       );
       setResponse(res.data.output);
