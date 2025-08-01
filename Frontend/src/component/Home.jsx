@@ -16,7 +16,7 @@ const Home = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     axios
-      .post("http://localhost:3000/shareExperience", {
+      .post("https://bageasy-backend.onrender.com/shareExperience", {
         month,
         destination,
         experience,
