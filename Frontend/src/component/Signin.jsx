@@ -19,7 +19,7 @@ const Signin = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     axios
-      .post("http://localhost:3000/auth/login", { email, password })
+      .post("https://bageasy-backend.onrender.com/auth/login", { email, password })
       .then((result) => {
         console.log(result);
         if (result.data.success === true) {

@@ -14,7 +14,7 @@ const Signup = () => {
 
   const handleSubmit = () => {
     axios
-      .post("http://localhost:3000/auth/register/user", {
+      .post("https://bageasy-backend.onrender.com/auth/register/user", {
         name,
         email,
         password,

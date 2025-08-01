@@ -11,12 +11,14 @@ connectDB();
 const app = express();
 app.use(express.json());
 app.use(cors());
-app.use("/api",apiRoute);
+app.use("/", () => {
+  console.log("BackendHome");
+});
+app.use("/api", apiRoute);
 app.use("/auth", authRoutes);
 app.use(verifyToken);
 
-
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-  console.log("server is running");
+  console.log(`Server is running on port ${PORT}`);
 });

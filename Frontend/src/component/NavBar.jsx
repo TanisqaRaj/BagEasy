@@ -18,7 +18,7 @@ const NavBar = () => {
     };
     if (token) {
       axios
-        .post("http://localhost:3000/auth/token-expiry", tokenObj)
+        .post("https://bageasy-backend.onrender.com/auth/token-expiry", tokenObj)
         .then((response) => {
           if (response.data.success) {
             navigate("/home");
