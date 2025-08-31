@@ -10,13 +10,15 @@ dotenv.config();
 connectDB();
 const app = express();
 app.use(express.json());
-app.use(cors());
+app.use(cors({
+  origin :"*"
+}));
 app.use("/", () => {
   console.log("BackendHome");
 });
 app.use("/api", apiRoute);
 app.use("/auth", authRoutes);
-app.use(verifyToken);
+// app.use(verifyToken);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
