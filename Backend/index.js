@@ -13,7 +13,7 @@ app.use(express.json());
 app.use(cors({
   origin :"*"
 }));
-app.use("/", () => {
+app.use("/", (req , res) => {
   console.log("BackendHome");
   res.send("Backend is running ✅");
 });
