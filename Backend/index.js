@@ -15,6 +15,7 @@ app.use(cors({
 }));
 app.use("/", () => {
   console.log("BackendHome");
+  res.send("Backend is running ✅");
 });
 app.use("/api", apiRoute);
 app.use("/auth", authRoutes);
