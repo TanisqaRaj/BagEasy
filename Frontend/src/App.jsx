@@ -12,7 +12,11 @@ function App() {
   const dispatch = useDispatch();
   const expiresIn = useSelector((state) => state.auth.expiresIn);
   useEffect(() => {
-    console.log("Expiry time from store:", expiresIn);
+    const expiryDate = expiresIn;
+    console.log(
+      "Expiry time in IST:",
+      expiryDate.toLocaleString("en-IN", { timeZone: "Asia/Kolkata" })
+    );
     if (expiresIn == null || (expiresIn != null && Date.now() >= expiresIn)) {
       dispatch(logout());
     }

@@ -13,7 +13,7 @@ export const AuthSlice = createSlice({
       state.token = action.payload.token;
       state.user = action.payload.user;
       const now = new Date();
-      state.expiresIn = new Date(now.getTime() + action.payload.expiresIn * 1000);;
+      state.expiresIn = new Date(now.getTime() + action.payload.expiresIn * 1000);
     },
      logout: (state) => {
       state.user = null;
