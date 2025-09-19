@@ -48,7 +48,7 @@ export const loginUser = async (req, res) => {
      return res.status(200).json({
       message: "Login Success",
       token,
-      expiresIn: process.env.JWT_EXPIRYTIME,
+      expiresIn: process.env.EXPIRYTIME,
       user:responsedata,
       success: true,
     });

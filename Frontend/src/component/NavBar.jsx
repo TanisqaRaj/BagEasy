@@ -40,7 +40,7 @@ const NavBar = () => {
   }, []);
 
   return (
-    <header className="bg-gradient-to-tr from-darkblue to-purple shadow-md w-full sticky top-0 z-[999] w-full m-0 p-0 overflow-hidden">
+    <header className="bg-gradient-to-tr from-darkblue to-purple shadow-md  sticky top-0 z-[999] w-full m-0 p-0 overflow-hidden">
       <div className="container mx-auto flex justify-between items-center py-4 px-6">
         {/* Logo Section */}
         <div className="flex items-center hidden md:block">
