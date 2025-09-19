@@ -5,7 +5,7 @@ import {useDispatch, useSelector} from "react-redux";
 import { login } from "./redux/AuthSlice";
 
 const Signin = () => {
-  const [email, setEmail] = useState(""); // Can be email, phone, or username
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   
   const dispatch = useDispatch();
@@ -57,7 +57,7 @@ const Signin = () => {
         >
           <span className="block sm:hidden">Username</span>
           <span className="hidden sm:block">
-            Email / Phone Number / Username
+            Email
           </span>
         </label>
         <input
