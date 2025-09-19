@@ -1,4 +1,3 @@
-import React from "react";
 import { FaInstagram } from "react-icons/fa6";
 import { ImWhatsapp } from "react-icons/im";
 import { TbBrandTelegram } from "react-icons/tb";
