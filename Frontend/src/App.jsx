@@ -12,7 +12,7 @@ function App() {
   const dispatch = useDispatch();
   const expiresIn = useSelector((state) => state.auth.expiresIn);
   useEffect(() => {
-    const expiryDate = expiresIn;
+    const expiryDate = new Date(expiresIn);
     console.log(
       "Expiry time in IST:",
       expiryDate.toLocaleString("en-IN", { timeZone: "Asia/Kolkata" })
