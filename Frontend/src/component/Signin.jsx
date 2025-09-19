@@ -27,6 +27,7 @@ const Signin = () => {
           login({
             token:result.data.token,
             user:result.data.user,
+            expiresIn:result.data.expiresIn,
           })
          )
           navigate("/home");

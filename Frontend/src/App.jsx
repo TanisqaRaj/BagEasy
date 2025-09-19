@@ -5,7 +5,18 @@ import Signup from "./component/Signup";
 import NavBar from "./component/NavBar";
 import Home from "./component/Home";
 import Footer from "./component/Footer";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
+import { logout } from "./component/redux/AuthSlice";
 function App() {
+  const dispatch = useDispatch();
+  const expiresIn = useSelector((state) => state.auth.expiresIn);
+  useEffect(() => {
+    console.log("Expiry time from store:", expiresIn);
+    if (expiresIn == null || (expiresIn != null && Date.now() >= expiresIn)) {
+      dispatch(logout());
+    }
+  }, []);
   const router = createBrowserRouter([
     {
       path: "/",
