@@ -103,7 +103,7 @@ const Signup = () => {
               <button
                 type="submit"
                 className="bg-purple hover:bg-darkblue text-white font-semibold py-2 px-4 rounded-md w-full transition duration-200"
-                onClick={handleSubmit}
+                onSubmit={handleSubmit}
               >
                 Sign up
               </button>
