@@ -13,6 +13,10 @@ const Signup = () => {
   };
 
   const handleSubmit = () => {
+    if(!name || !email || !password){
+      alert("Please fill all the fields");
+      return;
+    }
     axios
       .post("https://bageasy-backend.onrender.com/auth/register/user", {
         name,
@@ -99,6 +103,7 @@ const Signup = () => {
               <button
                 type="submit"
                 className="bg-purple hover:bg-darkblue text-white font-semibold py-2 px-4 rounded-md w-full transition duration-200"
+                onClick={handleSubmit}
               >
                 Sign up
               </button>
