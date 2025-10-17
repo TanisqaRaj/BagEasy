@@ -12,7 +12,8 @@ const Signup = () => {
     navigate("/signin");
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = (e) => {
+    e.preventDefault();
     if(!name || !email || !password){
       alert("Please fill all the fields");
       return;
@@ -27,7 +28,10 @@ const Signup = () => {
         console.log(result);
         navigate("/signin");
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        alert(err);
+        console.log(err);
+      });
   };
 
   return (
@@ -40,7 +44,7 @@ const Signup = () => {
             </h2>
           </div>
 
-          <form className="space-y-4" onSubmit={handleSubmit}>
+          <form className="space-y-4" onSubmit={handleSubmit} >
             {/* Name */}
             <div>
               <label
@@ -103,7 +107,6 @@ const Signup = () => {
               <button
                 type="submit"
                 className="bg-purple hover:bg-darkblue text-white font-semibold py-2 px-4 rounded-md w-full transition duration-200"
-                onSubmit={handleSubmit}
               >
                 Sign up
               </button>
