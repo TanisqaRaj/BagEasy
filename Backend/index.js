@@ -13,10 +13,10 @@ app.use(express.json());
 app.use(cors({
   origin :"*"
 }));
-// app.use("/", (req , res) => {
-//   console.log("BackendHome");
-//   res.send("Backend is running ✅");
-// });
+app.use("/", (req , res) => {
+  console.log("BackendHome");
+  res.send("Backend is running ✅");
+});
 app.use("/api", apiRoute);
 app.use("/auth", authRoutes);
 // app.use(verifyToken);
