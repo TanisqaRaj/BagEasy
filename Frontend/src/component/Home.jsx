@@ -16,7 +16,7 @@ const Home = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     axios
-      .post("https://bageasy-backend.onrender.com/shareExperience", {
+      .post("https://bageasy-backend.onrender.com/api/savefeedback", {
         month,
         destination,
         experience,
