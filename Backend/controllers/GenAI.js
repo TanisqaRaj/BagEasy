@@ -51,6 +51,7 @@ Return ONLY item names, one per line.
     );
 
     const result = await response.json();
+console.log("HF result:", result);
 
     if (result.error) {
       throw new Error(result.error);
