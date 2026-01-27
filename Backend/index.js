@@ -11,14 +11,17 @@ connectDB();
 const app = express();
 app.use(express.json());
 app.use(cors({
-  origin :"*"
+  origin: true,
+  credentials: true
 }));
-// app.use("/", (req , res) => {
-//   console.log("BackendHome");
-//   res.send("Backend is running ");
-// });
+
+app.get("/", (req, res) => {
+  res.status(200).send("Backend is running 🚀");
+});
+
 app.use("/api", apiRoute);
 app.use("/auth", authRoutes);
+
 // app.use(verifyToken);
 
 const PORT = process.env.PORT || 5000;

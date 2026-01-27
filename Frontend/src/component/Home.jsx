@@ -12,7 +12,7 @@ const Home = () => {
   const [response, setResponse] = useState("");
   // const token = useSelector((state) => state.auth.token);
 
-  //Api call to train AI model
+  //Api call to save user feedback
   const handleSubmit = (e) => {
     e.preventDefault();
     axios

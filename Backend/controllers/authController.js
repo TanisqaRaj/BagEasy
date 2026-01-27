@@ -2,29 +2,42 @@ import User from "../models/Signup.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
-//register user
 export const registerUser = async (req, res) => {
-  const { name, email, password } = req.body;
+  console.log("Register API HIT", req.body);
+
   try {
-    const userExist = await User.findOne({ email });
+    console.log("Before findOne");
+
+    const userExist = await User.findOne({ email: req.body.email });
+
+    console.log("After findOne");
 
     if (userExist)
       return res.status(400).json({ message: "User already exists" });
 
-    const hashedPassword = await bcrypt.hash(password, 10);
+    console.log("Before hashing");
+
+    const hashedPassword = await bcrypt.hash(req.body.password, 10);
+
+    console.log("After hashing");
 
     const user = new User({
-      name,
-      email,
+      name: req.body.name,
+      email: req.body.email,
       password: hashedPassword,
     });
+
     await user.save();
+
+    console.log("User saved");
+
     return res.status(201).json({ message: "User registered successfully" });
   } catch (error) {
-    console.error("Error in registerUser:", error.message);
+    console.error("REGISTER ERROR FULL:", error);
     return res.status(500).json({ message: "Internal Server Error" });
   }
 };
+
 //Login user
 export const loginUser = async (req, res) => {
   try {
