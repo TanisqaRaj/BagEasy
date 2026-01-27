@@ -11,7 +11,6 @@ export const generatePackingList = async (req, res) => {
   }
 
   try {
-    // 1️⃣ Fetch feedback
     const feedbacks = await Feedback.find({
       destination: { $regex: location, $options: "i" },
     }).limit(5);
@@ -21,7 +20,7 @@ export const generatePackingList = async (req, res) => {
         ? feedbacks.map((f) => `- ${f.experience}`).join("\n")
         : "No traveler feedback available.";
 
-    // 2️⃣ Prompt
+    // Prompt
     const prompt = `
 Create a packing list for a trip.
 
@@ -35,23 +34,20 @@ ${feedbackSummary}
 Return ONLY item names, one per line.
 `;
 
-    // 3️⃣ Call Hugging Face
     const response = await fetch(
-      "https://api-inference.huggingface.co/models/google/flan-t5-base",
+      "https://router.huggingface.co/api/models/google/flan-t5-base",
       {
         method: "POST",
         headers: {
           Authorization: `Bearer ${process.env.HF_API_KEY}`,
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          inputs: prompt,
-        }),
-      }
+        body: JSON.stringify({ inputs: prompt }),
+      },
     );
 
     const result = await response.json();
-console.log("HF result:", result);
+    console.log("HF result:", result);
 
     if (result.error) {
       throw new Error(result.error);
@@ -60,7 +56,6 @@ console.log("HF result:", result);
     const output = result[0]?.generated_text || "No response generated.";
 
     res.json({ output });
-
   } catch (error) {
     console.error("HF API error:", error.message);
     res.status(500).json({
