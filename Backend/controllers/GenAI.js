@@ -1,10 +1,7 @@
-import dotenv from "dotenv";
 import Feedback from "../models/Feedback.js";
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import dotenv from "dotenv";
 
 dotenv.config();
-
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API);
 
 export const generatePackingList = async (req, res) => {
   const { location, tripMonth, days } = req.body;
@@ -14,41 +11,59 @@ export const generatePackingList = async (req, res) => {
   }
 
   try {
-    // ✅ 1. Fetch relevant user feedback
+    // 1️⃣ Fetch feedback
     const feedbacks = await Feedback.find({
       destination: { $regex: location, $options: "i" },
     }).limit(5);
 
     const feedbackSummary =
       feedbacks.length > 0
-        ? feedbacks.map((f) => `• ${f.experience}`).join("\n")
-        : "No user feedback available yet.";
+        ? feedbacks.map((f) => `- ${f.experience}`).join("\n")
+        : "No traveler feedback available.";
 
-    // ✅ 2. Create prompt for Gemini
+    // 2️⃣ Prompt
     const prompt = `
-You are a travel assistant.
-Use the following real traveler feedback to create a smarter packing list.
+Create a packing list for a trip.
 
 Destination: ${location}
 Month: ${tripMonth}
-Trip Duration: ${days} days
+Duration: ${days} days
 
 Traveler feedback:
 ${feedbackSummary}
 
-Now, generate a plain packing list (just item names, one per line).
-If request is not travel-related, reply: "Sorry, I can only assist with travel packing lists."
+Return ONLY item names, one per line.
 `;
 
-    // ✅ 3. Send prompt to Gemini API
-    const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
-    const result = await model.generateContent(prompt);
-    const response = await result.response;
-    const text = await response.text();
+    // 3️⃣ Call Hugging Face
+    const response = await fetch(
+      "https://api-inference.huggingface.co/models/google/flan-t5-base",
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${process.env.HF_API_KEY}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          inputs: prompt,
+        }),
+      }
+    );
 
-    res.json({ output: text });
+    const result = await response.json();
+
+    if (result.error) {
+      throw new Error(result.error);
+    }
+
+    const output = result[0]?.generated_text || "No response generated.";
+
+    res.json({ output });
+
   } catch (error) {
-    console.error("Gemini API error:", error.message);
-    res.status(500).json({ error: "Failed to generate packing list." });
+    console.error("HF API error:", error.message);
+    res.status(500).json({
+      output: "• Clothes\n• Toiletries\n• Phone charger\n• Documents",
+    });
   }
 };
