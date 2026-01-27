@@ -42,18 +42,19 @@ Return ONLY item names, one per line.
           Authorization: `Bearer ${process.env.HF_API_KEY}`,
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ inputs: prompt }),
+        body: JSON.stringify({
+          inputs: prompt,
+          parameters: {
+            max_new_tokens: 150,
+          },
+        }),
       },
     );
 
     const result = await response.json();
-    console.log("HF result:", result);
+    console.log("HF API result:", result);
 
-    if (result.error) {
-      throw new Error(result.error);
-    }
-
-    const output = result[0]?.generated_text || "No response generated.";
+    const output = result?.[0]?.generated_text || "No response generated.";
 
     res.json({ output });
   } catch (error) {
