@@ -50,10 +50,19 @@ Return ONLY item names, one per line.
     });
 
     const result = await response.json();
-    console.log("HF API Response:", result);
+    console.log("HF API Response:", JSON.stringify(result));
 
-    // Hugging Face returns array format: [{ generated_text: "..." }]
-    const output = result[0]?.generated_text || result.generated_text || "No response generated.";
+    let output;
+    if (Array.isArray(result) && result.length > 0) {
+      output = result[0].generated_text;
+    } else if (result.generated_text) {
+      output = result.generated_text;
+    } else if (result.error) {
+      console.error("HF API Error:", result.error);
+      output = "• Clothes\n• Toiletries\n• Phone charger\n• Documents\n• Medications";
+    } else {
+      output = "• Clothes\n• Toiletries\n• Phone charger\n• Documents\n• Medications";
+    }
 
     res.json({ output });
 

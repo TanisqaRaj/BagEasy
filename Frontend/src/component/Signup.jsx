@@ -25,7 +25,6 @@ const Signup = () => {
         password,
       })
       .then((result) => {
-        console.log(result);
         navigate("/signin");
       })
       .catch((err) => {
