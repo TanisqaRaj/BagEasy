@@ -1,6 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
-import { useSelector } from "react-redux";
+// import { useSelector } from "react-redux";
 const Home = () => {
   const [isexperience, issetExperience] = useState(true);
   const [destination, setDestination] = useState("");
@@ -45,7 +45,7 @@ const Home = () => {
     try {
       const res = await axios.post(
         "https://bageasy-backend.onrender.com/api/getsuggestion",
-        inputData
+        inputData,
       );
       setResponse(res.data.output);
     } catch (error) {
