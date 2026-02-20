@@ -37,7 +37,7 @@ Return ONLY item names, one per line.
 `;
 
     // Call Hugging Face Router API
-    const response = await fetch("https://api-inference.huggingface.co/models/google/flan-t5-base", {
+    const response = await fetch("https://router.huggingface.co/models/google/flan-t5-base", {
       method: "POST",
       headers: {
         Authorization: `Bearer ${process.env.HF_API_KEY}`,
