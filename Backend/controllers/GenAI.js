@@ -37,7 +37,7 @@ Return ONLY item names, one per line.
 `;
 
     // Call Hugging Face Router API
-    const response = await fetch("https://router.huggingface.co/models/google/flan-t5-base", {
+    const response = await fetch("https://api-inference.huggingface.co/models/google/flan-t5-large", {
       method: "POST",
       headers: {
         Authorization: `Bearer ${process.env.HF_API_KEY}`,
@@ -48,6 +48,14 @@ Return ONLY item names, one per line.
         options: { use_cache: false }, // optional
       }),
     });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error("HF API Error Response:", errorText);
+      return res.json({
+        output: `• Clothes (${days} days worth)\n• Toiletries\n• Phone charger\n• Travel documents\n• Medications\n• Weather-appropriate gear for ${location}`,
+      });
+    }
 
     const result = await response.json();
     console.log("HF API Response:", JSON.stringify(result));
