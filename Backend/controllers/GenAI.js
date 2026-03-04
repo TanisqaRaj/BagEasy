@@ -1,6 +1,6 @@
 import Feedback from "../models/Feedback.js";
 import dotenv from "dotenv";
-import fetch from "node-fetch"; 
+import { GoogleGenerativeAI } from "@google/generative-ai";
 
 dotenv.config();
 
@@ -36,49 +36,22 @@ ${feedbackSummary}
 Return ONLY item names, one per line.
 `;
 
-    // Call Hugging Face Router API
-    const response = await fetch("https://api-inference.huggingface.co/models/google/flan-t5-large", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${process.env.HF_API_KEY}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        inputs: prompt,
-        options: { use_cache: false }, // optional
-      }),
-    });
+    // Initialize Gemini API
+    const genAI = new GoogleGenerativeAI(process.env.GEMINI_API);
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error("HF API Error Response:", errorText);
-      return res.json({
-        output: `• Clothes (${days} days worth)\n• Toiletries\n• Phone charger\n• Travel documents\n• Medications\n• Weather-appropriate gear for ${location}`,
-      });
-    }
-
-    const result = await response.json();
-    console.log("HF API Response:", JSON.stringify(result));
-
-    let output;
-    if (Array.isArray(result) && result.length > 0) {
-      output = result[0].generated_text;
-    } else if (result.generated_text) {
-      output = result.generated_text;
-    } else if (result.error) {
-      console.error("HF API Error:", result.error);
-      output = "• Clothes\n• Toiletries\n• Phone charger\n• Documents\n• Medications";
-    } else {
-      output = "• Clothes\n• Toiletries\n• Phone charger\n• Documents\n• Medications";
-    }
+    // Call Gemini API
+    const result = await model.generateContent(prompt);
+    const response = result.response;
+    const output = response.text();
 
     res.json({ output });
 
   } catch (error) {
-    console.error("HF API error:", error.message);
+    console.error("Gemini API error:", error.message);
     console.error("Full error:", error);
     res.status(500).json({
-      output: "• Clothes\n• Toiletries\n• Phone charger\n• Documents",
+      output: "• Clothes\n• Toiletries\n• Phone charger\n• Documents\n• Medications",
     });
   }
 };
