@@ -38,7 +38,7 @@ Return ONLY item names, one per line.
 
     // Initialize Gemini API
     const genAI = new GoogleGenerativeAI(process.env.GEMINI_API);
-    const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
 
     // Call Gemini API
     const result = await model.generateContent(prompt);
