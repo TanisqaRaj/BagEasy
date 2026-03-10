@@ -1,6 +1,6 @@
 import Feedback from "../models/Feedback.js";
 import dotenv from "dotenv";
-import { GoogleGenAI } from "@google/genai";
+import { GoogleGenerativeAI } from "@google/generative-ai";
 
 dotenv.config();
 
@@ -34,16 +34,14 @@ ${feedbackSummary}
 Return ONLY item names, one per line.
 `;
 
-    const ai = new GoogleGenAI({
-      apiKey: process.env.GEMINI_API,
-    });
+    // Initialize Gemini API
+    const genAI = new GoogleGenerativeAI(process.env.GEMINI_API);
+    const model = genAI.getGenerativeModel({ model: "gemini-pro" });
 
-    const response = await ai.models.generateContent({
-      model: "gemini-1.5-flash",
-      contents: prompt,
-    });
-
-    const output = response.text;
+    // Generate content
+    const result = await model.generateContent(prompt);
+    const response = result.response;
+    const output = response.text();
 
     res.json({ output });
 
