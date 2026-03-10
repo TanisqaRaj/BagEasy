@@ -1,6 +1,6 @@
 import Feedback from "../models/Feedback.js";
 import dotenv from "dotenv";
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import { GoogleGenAI } from "@google/genai";
 
 dotenv.config();
 
@@ -35,13 +35,15 @@ Return ONLY item names, one per line.
 `;
 
     // Initialize Gemini API
-    const genAI = new GoogleGenerativeAI(process.env.GEMINI_API);
-    const model = genAI.getGenerativeModel({ model: "gemini-pro" });
-
+    const genAI = new GoogleGenAI(process.env.GEMINI_API);
+    
     // Generate content
-    const result = await model.generateContent(prompt);
-    const response = result.response;
-    const output = response.text();
+    const result = await genAI.models.generateContent({
+      model: "gemini-pro",
+      prompt: prompt,
+    });
+
+    const output = result.text || result.candidates?.[0]?.content || "• Clothes\n• Toiletries\n• Phone charger\n• Documents";
 
     res.json({ output });
 
