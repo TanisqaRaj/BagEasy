@@ -1,17 +1,27 @@
 import Feedback from "../models/Feedback.js";
 import dotenv from "dotenv";
-import { GoogleGenAI } from "@google/genai";
+import { GoogleGenerativeAI } from "@google/generative-ai";
 
 dotenv.config();
 
 export const generatePackingList = async (req, res) => {
   const { location, tripMonth, days } = req.body;
-
+  const apiKey = process.env.GEMINI_API;
   if (!location || !tripMonth || !days) {
     return res.status(400).json({ error: "All fields are required." });
   }
 
   try {
+    // Check if API key exists
+    
+    if (apiKey==null) {
+      console.error("GEMINI_API environment variable is not set");
+      return res.status(500).json({
+        error: "API configuration error",
+        output: "• Clothes\n• Toiletries\n• Phone charger\n• Documents\n• Medications",
+      });
+    }
+
     const feedbacks = await Feedback.find({
       destination: { $regex: location, $options: "i" },
     }).limit(5);
@@ -34,16 +44,10 @@ ${feedbackSummary}
 Return ONLY item names, one per line.
 `;
 
-    // Initialize Gemini API
-    const genAI = new GoogleGenAI(process.env.GEMINI_API);
-    
-    // Generate content
-    const result = await genAI.models.generateContent({
-      model: "gemini-pro",
-      prompt: prompt,
-    });
-
-    const output = result.text || result.candidates?.[0]?.content || "• Clothes\n• Toiletries\n• Phone charger\n• Documents";
+    const genAI = new GoogleGenerativeAI(apiKey);
+    const model = genAI.getGenerativeModel({ model: "gemini-3-flash-preview" });
+    const result = await model.generateContent(prompt);
+    const output = result.response.text();
 
     res.json({ output });
 
