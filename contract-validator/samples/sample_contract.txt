@@ -1,0 +1,32 @@
+SERVICE AGREEMENT
+
+This Service Agreement ("Agreement") is entered into as of January 1, 2024, by and between TechCorp Inc. ("Service Provider") and ClientCo LLC ("Client").
+
+1. SERVICES
+The Service Provider agrees to provide software development services as described in Exhibit A.
+
+2. PAYMENT TERMS
+The Client agrees to pay the Service Provider a total fee of $50,000. Payment shall be made in full within 7 days of signing this agreement. All payments are non-refundable under any circumstances.
+
+3. LIABILITY
+The Service Provider shall be liable for any and all damages, losses, costs, or expenses arising from or related to the services provided under this Agreement, without any limitation or cap on liability. The Service Provider agrees to indemnify and hold harmless the Client from all claims.
+
+4. CONFIDENTIALITY
+Both parties agree to maintain the confidentiality of all proprietary information shared during the term of this Agreement and for an indefinite period thereafter.
+
+5. TERM AND TERMINATION
+This Agreement shall commence on the date first written above and shall continue indefinitely. Neither party may terminate this Agreement for any reason. This Agreement is irrevocable.
+
+6. INTELLECTUAL PROPERTY
+All intellectual property created during the performance of services shall belong to the Service Provider.
+
+7. DISPUTE RESOLUTION
+Any disputes arising under this Agreement may be resolved through negotiation between the parties.
+
+8. MISCELLANEOUS
+This Agreement constitutes the entire agreement between the parties. Any modifications must be made in writing and signed by both parties.
+
+IN WITNESS WHEREOF, the parties have executed this Agreement as of the date first written above.
+
+Service Provider: _____________________
+Client: _____________________
