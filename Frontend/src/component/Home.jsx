@@ -221,8 +221,9 @@ const Home = () => {
     try {
       const res = await axios.post(`${API}/api/getsuggestion`, form);
       setResult(res.data.output);
-    } catch {
-      setError("Failed to generate plan. Please try again.");
+    } catch (err) {
+      const msg = err.response?.data?.error;
+      setError(msg || "Failed to generate plan. Please try again.");
     } finally {
       setLoading(false);
     }

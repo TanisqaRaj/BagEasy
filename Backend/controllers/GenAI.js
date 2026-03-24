@@ -85,16 +85,41 @@ IMPORTANT: Return ONLY valid JSON. No markdown, no extra text outside JSON.`;
 
     const genAI = new GoogleGenerativeAI(apiKey);
     const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
-    const result = await model.generateContent(prompt);
-    let text = result.response.text().trim();
 
-    // Strip markdown code fences if present
+    let text, lastError;
+    for (let attempt = 0; attempt < 4; attempt++) {
+      try {
+        const result = await model.generateContent(prompt);
+        text = result.response.text().trim();
+        break;
+      } catch (err) {
+        lastError = err;
+        if (err.status === 429) {
+          // Parse retryDelay from error details, fallback to exponential backoff
+          const retryDetail = err.errorDetails?.find((d) => d.retryDelay);
+          const delaySec = retryDetail
+            ? parseInt(retryDetail.retryDelay) + 2
+            : Math.pow(2, attempt + 1) * 5;
+          console.warn(`Rate limited. Retrying in ${delaySec}s (attempt ${attempt + 1})`);
+          await new Promise((r) => setTimeout(r, delaySec * 1000));
+        } else {
+          throw err;
+        }
+      }
+    }
+
+    if (!text) throw lastError;
+
     text = text.replace(/^```json\s*/i, "").replace(/^```\s*/i, "").replace(/\s*```$/i, "");
-
     const parsed = JSON.parse(text);
     res.json({ output: parsed });
   } catch (error) {
     console.error("Error:", error);
-    res.status(500).json({ error: "Failed to generate travel plan." });
+    const isRateLimit = error?.status === 429;
+    res.status(isRateLimit ? 429 : 500).json({
+      error: isRateLimit
+        ? "Gemini API rate limit reached. Please wait a moment and try again."
+        : "Failed to generate travel plan.",
+    });
   }
 };
