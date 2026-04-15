@@ -7,6 +7,8 @@ import { login } from "./redux/AuthSlice";
 const Signin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   
   const dispatch = useDispatch();
   const token=useSelector((state)=>state.auth.token);
@@ -18,24 +20,35 @@ const Signin = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setError("");
+    if (!email || !password) {
+      setError("Please fill in all fields.");
+      return;
+    }
+    setLoading(true);
     axios
       .post("https://bageasy-backend.onrender.com/auth/login", { email, password })
       .then((result) => {
-        console.log(result);
         if (result.data.success === true) {
-         dispatch(
-          login({
-            token:result.data.token,
-            user:result.data.user,
-            expiresIn:result.data.expiresIn,
-          })
-         )
+          dispatch(
+            login({
+              token: result.data.token,
+              user: result.data.user,
+              expiresIn: result.data.expiresIn,
+            })
+          );
           navigate("/home");
         } else {
-          navigate("/signup");
+          setError("Login failed. Please try again.");
         }
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        const msg = err.response?.data?.message;
+        if (msg === "user not found") setError("No account found with this email.");
+        else if (msg === "wrong password") setError("Incorrect password. Please try again.");
+        else setError("Something went wrong. Please try again.");
+      })
+      .finally(() => setLoading(false));
   };
 
   return (
@@ -50,6 +63,12 @@ const Signin = () => {
 
     {/* Form */}
     <form className="space-y-4" onSubmit={handleSubmit}>
+      {/* Error Message */}
+      {error && (
+        <div className="bg-red-100 border border-red-400 text-red-700 text-sm px-4 py-2 rounded-md">
+          {error}
+        </div>
+      )}
       {/* Email Input */}
       <div>
         <label
@@ -93,9 +112,10 @@ const Signin = () => {
       <div>
         <button
           type="submit"
-          className="bg-purple hover:bg-darkblue text-white font-semibold py-2 sm:py-3 px-4 rounded-md w-full transition duration-200"
+          disabled={loading}
+          className="bg-purple hover:bg-darkblue text-white font-semibold py-2 sm:py-3 px-4 rounded-md w-full transition duration-200 disabled:opacity-60 disabled:cursor-not-allowed"
         >
-          Sign In
+          {loading ? "Signing in..." : "Sign In"}
         </button>
       </div>
 

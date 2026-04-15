@@ -6,6 +6,9 @@ const Signup = () => {
   const [email, setEmail] = useState(""); 
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
   const navigateRegister = () => {
@@ -14,23 +17,33 @@ const Signup = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if(!name || !email || !password){
-      alert("Please fill all the fields");
+    setError("");
+    setSuccess("");
+    if (!name || !email || !password) {
+      setError("Please fill in all fields.");
       return;
     }
+    if (password.length < 6) {
+      setError("Password must be at least 6 characters.");
+      return;
+    }
+    setLoading(true);
     axios
       .post("https://bageasy-backend.onrender.com/auth/register/user", {
         name,
         email,
         password,
       })
-      .then((result) => {
-        navigate("/signin");
+      .then(() => {
+        setSuccess("Account created! Redirecting to sign in...");
+        setTimeout(() => navigate("/signin"), 1500);
       })
       .catch((err) => {
-        alert(err);
-        console.log(err);
-      });
+        const msg = err.response?.data?.message;
+        if (msg === "User already exists") setError("An account with this email already exists.");
+        else setError("Registration failed. Please try again.");
+      })
+      .finally(() => setLoading(false));
   };
 
   return (
@@ -44,6 +57,17 @@ const Signup = () => {
           </div>
 
           <form className="space-y-4" onSubmit={handleSubmit} >
+            {/* Error / Success Messages */}
+            {error && (
+              <div className="bg-red-100 border border-red-400 text-red-700 text-sm px-4 py-2 rounded-md">
+                {error}
+              </div>
+            )}
+            {success && (
+              <div className="bg-green-100 border border-green-400 text-green-700 text-sm px-4 py-2 rounded-md">
+                {success}
+              </div>
+            )}
             {/* Name */}
             <div>
               <label
@@ -105,9 +129,10 @@ const Signup = () => {
             <div>
               <button
                 type="submit"
-                className="bg-purple hover:bg-darkblue text-white font-semibold py-2 px-4 rounded-md w-full transition duration-200"
+                disabled={loading}
+                className="bg-purple hover:bg-darkblue text-white font-semibold py-2 px-4 rounded-md w-full transition duration-200 disabled:opacity-60 disabled:cursor-not-allowed"
               >
-                Sign up
+                {loading ? "Creating account..." : "Sign up"}
               </button>
             </div>
 

@@ -105,9 +105,8 @@ IMPORTANT: Return ONLY valid JSON. No markdown, no extra text outside JSON.`;
         break;
       } catch (err) {
         lastError = err;
-        if (err?.status === 429) {
-          console.warn(`${modelName} quota exhausted, trying next model...`);
-          // Small delay before trying next model
+        if (err?.status === 429 || err?.status === 503) {
+          console.warn(`${modelName} unavailable (${err.status}), trying next model...`);
           await sleep(1000);
           continue;
         }
@@ -120,12 +119,12 @@ IMPORTANT: Return ONLY valid JSON. No markdown, no extra text outside JSON.`;
     text = text.replace(/^```json\s*/i, "").replace(/^```\s*/i, "").replace(/\s*```$/i, "");
     res.json({ output: JSON.parse(text) });
   } catch (error) {
-    if (error?.status === 429) {
+    if (error?.status === 429 || error?.status === 503) {
       const retryDetail = error.errorDetails?.find((d) => d["@type"]?.includes("RetryInfo"));
       const retryAfter = retryDetail?.retryDelay ? parseInt(retryDetail.retryDelay) + 2 : 60;
-      console.error("All Gemini models rate limited. Free tier quota exhausted.");
-      return res.status(429).json({
-        error: "AI service is temporarily unavailable due to rate limits. Please try again in a minute.",
+      console.error("All Gemini models unavailable (rate limited or overloaded).");
+      return res.status(503).json({
+        error: "AI service is temporarily unavailable. Please try again in a moment.",
         retryAfter,
       });
     }
