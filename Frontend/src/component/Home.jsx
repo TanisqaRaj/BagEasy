@@ -202,6 +202,7 @@ const Home = () => {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);
   const [error, setError] = useState("");
+  const [countdown, setCountdown] = useState(0);
 
   // AI form state
   const [form, setForm] = useState({
@@ -213,8 +214,8 @@ const Home = () => {
   const [fb, setFb] = useState({ destination: "", month: "", experience: "" });
   const [fbMsg, setFbMsg] = useState("");
 
-  const handleAI = async (e) => {
-    e.preventDefault();
+  const handleAI = async (e, isRetry = false) => {
+    if (!isRetry) e?.preventDefault();
     setLoading(true);
     setError("");
     setResult(null);
@@ -222,9 +223,23 @@ const Home = () => {
       const res = await axios.post(`${API}/api/getsuggestion`, form);
       setResult(res.data.output);
     } catch (err) {
-      const msg = err.response?.data?.error;
-      setError(msg || "Failed to generate plan. Please try again.");
-    } finally {
+      const data = err.response?.data;
+      if (err.response?.status === 429 && data?.retryAfter) {
+        let secs = data.retryAfter;
+        setLoading(false);
+        setCountdown(secs);
+        const interval = setInterval(() => {
+          secs -= 1;
+          setCountdown(secs);
+          if (secs <= 0) {
+            clearInterval(interval);
+            setCountdown(0);
+            handleAI(null, true);
+          }
+        }, 1000);
+        return;
+      }
+      setError(data?.error || "Failed to generate plan. Please try again.");
       setLoading(false);
     }
   };
@@ -314,11 +329,14 @@ const Home = () => {
 
               {error && <p className="text-red-600 text-sm">{error}</p>}
 
-              <button type="submit" disabled={loading}
+              <button type="submit" disabled={loading || countdown > 0}
                 className="bg-purple hover:bg-darkblue text-white font-semibold py-2.5 px-4 rounded-md w-full transition-colors disabled:opacity-60 flex items-center justify-center gap-2">
-                {loading ? (
-                  <><span className="animate-spin inline-block w-4 h-4 border-2 border-white border-t-transparent rounded-full" /> Generating Plan...</>
-                ) : "✨ Generate Travel Plan"}
+                {loading
+                  ? <><span className="animate-spin inline-block w-4 h-4 border-2 border-white border-t-transparent rounded-full" /> Generating Plan...</>
+                  : countdown > 0
+                  ? <>⏳ Rate limited — retrying in {countdown}s...</>
+                  : "✨ Generate Travel Plan"
+                }
               </button>
             </form>
           ) : (
