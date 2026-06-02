@@ -1,0 +1,36 @@
+<svg width="256" height="256" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bagGradient" x1="40" y1="40" x2="216" y2="216" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#4F46E5"/>
+      <stop offset="1" stop-color="#06B6D4"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Suitcase Body -->
+  <rect
+    x="40"
+    y="60"
+    width="176"
+    height="140"
+    rx="24"
+    fill="url(#bagGradient)"
+  />
+
+  <!-- Handle -->
+  <path
+    d="M96 60V42C96 29 106 20 128 20C150 20 160 29 160 42V60"
+    stroke="#4F46E5"
+    stroke-width="12"
+    stroke-linecap="round"
+  />
+
+  <!-- Letter B -->
+  <path
+    d="M98 95H132C149 95 160 104 160 118C160 129 152 136 141 139C154 142 164 150 164 164C164 180 151 190 130 190H98V95ZM126 133C136 133 142 128 142 120C142 112 136 108 126 108H116V133H126ZM129 177C141 177 146 171 146 163C146 154 140 148 127 148H116V177H129Z"
+    fill="white"
+  />
+
+  <!-- Wheels -->
+  <circle cx="78" cy="214" r="10" fill="#1E293B"/>
+  <circle cx="178" cy="214" r="10" fill="#1E293B"/>
+</svg>
