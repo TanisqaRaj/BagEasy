@@ -43,8 +43,8 @@ const NavBar = () => {
     <header className="bg-gradient-to-tr from-darkblue to-purple shadow-md  sticky top-0 z-[999] w-full m-0 p-0 overflow-hidden">
       <div className="container mx-auto flex justify-between items-center py-4 px-6">
         {/* Logo Section */}
-        <div className="flex items-center hidden md:block">
-          <img alt="Logo" className="h-10" height={150} width={50} />
+        <div className="flex items-center hidden md:block cursor-pointer" onClick={() => navigate("/")}>
+          <img src="/bageasy.svg" alt="Logo" className="h-10" height={150} width={50} />
         </div>
 
         <div className="flex items-center space-x-4">

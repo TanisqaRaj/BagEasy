@@ -18,7 +18,7 @@ const Footer = () => {
   </div>
 
   {/* Copyright */}
-  <div className="flex flex-wrap gap-1 items-center justify-center mt-1 text-[10px] sm:text-xs lg:text-sm text-white">
+  <div className="flex flex-wrap gap-1 items-center justify-center mt-1 pb-5 text-[10px] sm:text-xs lg:text-sm text-white">
     <FaRegCopyright />
     <span>2024 Healthcare. All rights reserved.</span>
   </div>
